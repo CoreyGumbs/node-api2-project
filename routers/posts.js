@@ -145,7 +145,7 @@ router.delete('/:id', (req, res) =>{
         }else{
             db.remove(id)
             .then(post => {
-                res.status(204).json({message: "Post deleted."});
+                res.status(204);
             });    
         }
     })
