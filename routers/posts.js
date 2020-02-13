@@ -56,11 +56,9 @@ router.get('/:id/comments', (req, res) => {
 });
 
 //POST ROUTES
-
+//new post
 router.post('/', (req, res) =>{
     const { body } = req;
-
-    console.log(body);
 
     if(body.title === '' || body.title === null){
         res.status(400).json({errorMessage: "Please provide title and contents for the post."});
@@ -73,15 +71,43 @@ router.post('/', (req, res) =>{
             res.status(201).json(post);
         })
         .catch( error => {
-    
             res.status(500).json({error: "There was an error while saving the post to the database"});
             console.log(error);
         })  
     }    
 });
 
-//UPDATE/PUT ROUTES
+//new comment
+router.post('/:id/comments', (req, res) => {
+    const { body } = req;
+    const { id } = req.params;
 
+    if(body.text === '' || body.text === null){
+        res.status(404).json({errorMessage: "Please provide text for the comment."})
+    }else{
+        db.findById(id)
+        .then(post => {
+            if(post.length === 0){
+                res.status(404).json({message: "The post with the specified ID does not exist."})
+            }
+            else{
+                res.status(200).json(post);
+                db.insertComment(body)
+                .then(comment => {
+                    res.json(201).json(comment);
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({error: "There was an error while saving the comment to the database"});
+        });
+    }
+});
+
+//UPDATE/PUT ROUTES
+router.put('/:id', (req, res) => {
+
+});
 //DELETE ROUTES
 
 module.exports = router;
