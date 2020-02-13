@@ -106,7 +106,33 @@ router.post('/:id/comments', (req, res) => {
 
 //UPDATE/PUT ROUTES
 router.put('/:id', (req, res) => {
+    const {id} = req.params;
+    const {body} = req;
 
+    if(body.title === '' || body.title === null){
+        res.status(400).json({errorMessage: "Please provide title and contents for the post."});
+    }else if(body.contents === '' || body.contents === null){
+        res.status(400).json({errorMessage: "Please provide title and contents for the post."});
+    }
+    else{
+        db.findById(id)
+        .then(post => {
+            if(post.length === 0){
+                res.status(404).json({message: "The post with the specified ID does not exist."})
+            }
+            else{
+                // res.status(200).json(post);
+                db.update(id, body)
+                .then(post => {
+                    res.json(200).json(post);
+                })
+                
+            }
+        })
+        .catch(error => {
+            res.status(500).json({ error: "The post information could not be modified."});
+        });
+    }
 });
 //DELETE ROUTES
 
