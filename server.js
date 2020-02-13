@@ -7,9 +7,11 @@ const server = express();
 const port = 5000;
 
 //middleware
-server.use('/api/posts', postRouter);
-server.use(cors());
 server.use(express.json());
+server.use(cors());
+server.use('/api/posts', postRouter);
+
+
 
 
 server.get('/', (req, res) => {
