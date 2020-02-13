@@ -57,6 +57,29 @@ router.get('/:id/comments', (req, res) => {
 
 //POST ROUTES
 
+router.post('/', (req, res) =>{
+    const { body } = req;
+
+    console.log(body);
+
+    if(body.title === '' || body.title === null){
+        res.status(400).json({errorMessage: "Please provide title and contents for the post."});
+    }else if(body.contents === '' || body.contents === null){
+        res.status(400).json({errorMessage: "Please provide title and contents for the post."});
+    }else{
+        db.insert(body)
+        .then(post => {
+            console.log(post);
+            res.status(201).json(post);
+        })
+        .catch( error => {
+    
+            res.status(500).json({error: "There was an error while saving the post to the database"});
+            console.log(error);
+        })  
+    }    
+});
+
 //UPDATE/PUT ROUTES
 
 //DELETE ROUTES
